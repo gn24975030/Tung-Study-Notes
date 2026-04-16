@@ -11,21 +11,28 @@
 提交後將會顯示正確答案與中英詳解，您的成績也會自動儲存至瀏覽器的學習紀錄中。
 
 <div id="quiz-container" class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <!-- 測驗區 -->
     <div id="quiz-content">
         <h2 id="question-text" class="text-xl font-bold mb-4">Loading...</h2>
         <div id="options-container" class="space-y-3"></div>
         <button id="submit-btn" class="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Submit Answer</button>
     </div>
     
-    <div id="feedback-container" class="hidden mt-4 p-4 bg-gray-50 rounded border-l-4 border-blue-500">
-        <p id="explanation-text" class="text-gray-700"></p>
-        <button id="next-btn" class="mt-4 px-4 py-2 bg-green-600 text-white rounded">Next Question</button>
-    </div>
-
+    <!-- 結果與檢視區 -->
     <div id="result-container" class="hidden">
         <h2 class="text-2xl font-bold mb-4">Quiz Completed!</h2>
         <p id="score-text" class="text-lg mb-4"></p>
-        <a href="#/result" class="px-4 py-2 bg-blue-600 text-white rounded inline-block">View Results Page</a>
+        <div class="flex gap-4">
+            <button id="review-btn" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Review Answers</button>
+            <a href="#/result" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">View History</a>
+        </div>
+    </div>
+
+    <!-- 詳解列表區 -->
+    <div id="review-container" class="hidden mt-6">
+        <h2 class="text-xl font-bold mb-4 border-b pb-2">Answer Review</h2>
+        <div id="review-list" class="space-y-6"></div>
+        <button onclick="location.reload()" class="mt-6 px-4 py-2 bg-gray-600 text-white rounded">Retake Quiz</button>
     </div>
 </div>
 
@@ -48,23 +55,22 @@
 
     let currentQ = 0;
     let score = 0;
+    let userAnswers = []; // 儲存使用者選擇的索引
 
     const qText = document.getElementById('question-text');
     const optContainer = document.getElementById('options-container');
     const submitBtn = document.getElementById('submit-btn');
-    const feedbackContainer = document.getElementById('feedback-container');
-    const explanationText = document.getElementById('explanation-text');
-    const nextBtn = document.getElementById('next-btn');
     const quizContent = document.getElementById('quiz-content');
     const resultContainer = document.getElementById('result-container');
     const scoreText = document.getElementById('score-text');
+    const reviewBtn = document.getElementById('review-btn');
+    const reviewContainer = document.getElementById('review-container');
+    const reviewList = document.getElementById('review-list');
 
     function loadQuestion() {
         const q = questions[currentQ];
         qText.innerText = `Q${currentQ + 1}: ${q.q}`;
         optContainer.innerHTML = '';
-        feedbackContainer.classList.add('hidden');
-        submitBtn.classList.remove('hidden');
         
         q.options.forEach((opt, index) => {
             const div = document.createElement('div');
@@ -80,15 +86,10 @@
         const selected = document.querySelector('input[name="q"]:checked');
         if (!selected) return alert('Please select an answer.');
         
-        const isCorrect = parseInt(selected.value) === questions[currentQ].answer;
-        if (isCorrect) score++;
+        const answerIndex = parseInt(selected.value);
+        userAnswers.push(answerIndex);
+        if (answerIndex === questions[currentQ].answer) score++;
         
-        explanationText.innerHTML = `<strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong><br>${questions[currentQ].explanation}`;
-        submitBtn.classList.add('hidden');
-        feedbackContainer.classList.remove('hidden');
-    };
-
-    nextBtn.onclick = () => {
         currentQ++;
         if (currentQ < questions.length) {
             loadQuestion();
@@ -99,11 +100,11 @@
 
     function showResult() {
         quizContent.classList.add('hidden');
-        feedbackContainer.classList.add('hidden');
         resultContainer.classList.remove('hidden');
         const finalScore = Math.round((score / questions.length) * 100);
         scoreText.innerText = `You scored ${score}/${questions.length} (${finalScore}%).`;
         
+        // 儲存到 localStorage
         const history = JSON.parse(localStorage.getItem('quiz_history') || '[]');
         history.push({
             date: new Date().toISOString().split('T')[0],
@@ -112,6 +113,25 @@
         });
         localStorage.setItem('quiz_history', JSON.stringify(history));
     }
+
+    reviewBtn.onclick = () => {
+        resultContainer.classList.add('hidden');
+        reviewContainer.classList.remove('hidden');
+        
+        reviewList.innerHTML = '';
+        questions.forEach((q, index) => {
+            const isCorrect = userAnswers[index] === q.answer;
+            const div = document.createElement('div');
+            div.className = `p-4 rounded border ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+            div.innerHTML = `
+                <p class="font-bold">Q${index + 1}: ${q.q}</p>
+                <p class="text-sm mt-1">Your answer: <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${q.options[userAnswers[index]]}</span></p>
+                <p class="text-sm">Correct answer: <span class="text-green-700 font-semibold">${q.options[q.answer]}</span></p>
+                <div class="mt-2 text-gray-600 text-sm border-t pt-2">${q.explanation}</div>
+            `;
+            reviewList.appendChild(div);
+        });
+    };
 
     loadQuestion();
 })();
