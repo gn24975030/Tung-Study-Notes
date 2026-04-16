@@ -7,7 +7,7 @@
 
 ## Instructions（使用說明）
 Pick one option for each question, then press **SUBMIT**.  
-After submitting, the correct answers and explanations (with bilingual text) will appear.
+After submitting, the correct answers and explanations will appear, and your score will be saved to your browser history.
 
 <div id="quiz-container"></div>
 
@@ -44,34 +44,51 @@ function renderQuiz() {
     container.innerHTML = '';
     quizData.forEach((q, index) => {
         const div = document.createElement('div');
-        div.className = 'quiz-question my-4 p-4 border rounded';
+        div.className = 'quiz-question my-4 p-4 border rounded shadow-sm';
         div.innerHTML = `
-            <p class="font-bold">${index + 1}. ${q.question}</p>
+            <p class="font-bold mb-2">${index + 1}. ${q.question}</p>
             ${q.options.map((opt, i) => `
-                <label class="block my-2">
-                    <input type="radio" name="q${index}" value="${i}"> ${opt}
+                <label class="block my-1 cursor-pointer">
+                    <input type="radio" name="q${index}" value="${i}" class="mr-2"> ${opt}
                 </label>
             `).join('')}
-            <div id="result${index}" class="hidden mt-2 p-2 bg-gray-100 rounded"></div>
+            <div id="result${index}" class="hidden mt-3 p-3 rounded text-sm"></div>
         `;
         container.appendChild(div);
     });
-    container.innerHTML += `<button onclick="submitQuiz()" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">SUBMIT</button>`;
+    container.innerHTML += `<button onclick="submitQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors">SUBMIT</button>`;
 }
 
 function submitQuiz() {
+    let score = 0;
+    const total = quizData.length;
+
+    // 1. 批改邏輯：未作答直接視為錯誤
     quizData.forEach((q, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
         const resultDiv = document.getElementById(`result${index}`);
         resultDiv.classList.remove('hidden');
+        
         if (selected && parseInt(selected.value) === q.answer) {
+            score++;
             resultDiv.innerHTML = "✅ Correct!<br>" + q.explanation;
-            resultDiv.classList.add('bg-green-100');
+            resultDiv.className = "mt-3 p-3 rounded text-sm bg-green-100 border border-green-200";
         } else {
+            // 若 selected 為 null 或答案錯誤，皆顯示為錯誤
             resultDiv.innerHTML = "❌ Incorrect. The correct answer was: " + q.options[q.answer] + "<br>" + q.explanation;
-            resultDiv.classList.add('bg-red-100');
+            resultDiv.className = "mt-3 p-3 rounded text-sm bg-red-100 border border-red-200";
         }
     });
+
+    // 2. 儲存成績到 localStorage
+    const timestamp = new Date().toLocaleString();
+    const newResult = { topic: "Topic 2: Interdependence", score: score, total: total, date: timestamp };
+    
+    const history = JSON.parse(localStorage.getItem('study_results') || '[]');
+    history.push(newResult);
+    localStorage.setItem('study_results', JSON.stringify(history));
+    
+    alert(`測驗完成！得分：${score}/${total}。\n成績已儲存至系統。`);
 }
 
 renderQuiz();
