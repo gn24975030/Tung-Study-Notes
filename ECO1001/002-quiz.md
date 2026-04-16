@@ -10,167 +10,109 @@
 （若有未作答的題目，提交時將直接視為答錯）。  
 提交後將會顯示正確答案與中英詳解，您的成績也會自動儲存至瀏覽器的學習紀錄中。
 
-<script src="https://cdn.tailwindcss.com"></script>
+<div id="quiz-container" class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div id="quiz-content">
+        <h2 id="question-text" class="text-xl font-bold mb-4">Loading...</h2>
+        <div id="options-container" class="space-y-3"></div>
+        <button id="submit-btn" class="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Submit Answer</button>
+    </div>
+    
+    <div id="feedback-container" class="hidden mt-4 p-4 bg-gray-50 rounded border-l-4 border-blue-500">
+        <p id="explanation-text" class="text-gray-700"></p>
+        <button id="next-btn" class="mt-4 px-4 py-2 bg-green-600 text-white rounded">Next Question</button>
+    </div>
 
-<style>
-.correct-bg { background-color: #dcfce7 !important; border-color: #22c55e !important; }
-.wrong-bg { background-color: #fee2e2 !important; border-color: #ef4444 !important; }
-.explanation { display: none; }
-.show-explanation { display: block; margin-top: 10px; padding: 12px; background-color: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 4px; }
-</style>
-
-<div id="quiz-container" class="my-6">
-<!-- 題目將由 JS 動態生成 -->
-</div>
-
-<div class="flex items-center gap-4 mb-12">
-<button id="submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors">
-Submit / 提交答案
-</button>
-<button id="reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition-colors hidden">
-Retry / 重新測驗
-</button>
-<div id="score-display" class="text-xl font-bold hidden">
-Score / 得分: <span id="score-value" class="text-blue-600 text-2xl">0</span> / 4
-</div>
+    <div id="result-container" class="hidden">
+        <h2 class="text-2xl font-bold mb-4">Quiz Completed!</h2>
+        <p id="score-text" class="text-lg mb-4"></p>
+        <a href="#/result" class="px-4 py-2 bg-blue-600 text-white rounded inline-block">View Results Page</a>
+    </div>
 </div>
 
 <script>
-const quizData = [
-{
-question: "Assume Zimbabwe and Portugal can switch between producing toothbrushes and producing hairbrushes at a constant rate. In 1 hour: Zimbabwe can produce 20 toothbrushes or 6 hairbrushes. Portugal can produce 12 toothbrushes or 10 hairbrushes. Which country has a comparative advantage in producing toothbrushes?",
-options: ["Zimbabwe", "Portugal", "Neither", "Both"],
-answer: 0,
-expEn: "Zimbabwe should specialize in producing toothbrushes because its opportunity cost of hairbrushes is lower when producing toothbrushes.<br>Opportunity cost (toothbrushes in terms of hairbrushes):<br>Zimbabwe: 6/20 = 0.3 hairbrush/toothbrush<br>Portugal: 10/12 ≈ 0.833 hairbrush/toothbrush",
-expZh: "Zimbabwe 應該專業分工在生產牙刷，因為它在把資源用來生產牙刷時，相對於其他商品的機會成本更低。"
-},
-{
-question: "The following table describes production possibilities (per worker per hour): Boston: 3 red socks (R) and 3 white socks (W). Chicago: 2 red socks (R) and 1 white sock (W). What is the range of prices at which trade can occur? (Price of red socks relative to white socks)",
-options: ["1W ≤ 1R ≤ 2W", "0.5W ≤ 1R ≤ 1W", "1R ≤ 0.5W", "2W ≤ 1R"],
-answer: 1,
-expEn: "The trade can occur when 1R/1W is between the opportunity-cost bounds. Here, the acceptable range is 0.5W ≤ 1R ≤ 1W.",
-expZh: "只要紅襪與白襪的「相對價格」落在雙方都接受的機會成本範圍內，貿易就能發生。本題可行範圍為 0.5W ≤ 1R ≤ 1W。"
-},
-{
-question: "True or False: 'Canada and the U.S. both produce wheat and computer software. Canada is said to have the comparative advantage in producing wheat if Canada requires fewer resources than the U.S. to produce a bushel of wheat.'",
-options: ["True", "False"],
-answer: 1,
-expEn: "False. Fewer resources to produce wheat means absolute advantage, not comparative advantage. Comparative advantage is about having a lower opportunity cost of producing wheat.",
-expZh: "錯。比較資源較少能生產小麥屬於「絕對利益」，不是「比較利益」。比較利益是看生產小麥的機會成本是否更低。"
-},
-{
-question: "True or False: 'Mike can make 4 tables or 20 chairs in one month. His opportunity cost of 1 chair is 1/5 table.'",
-options: ["True", "False"],
-answer: 0,
-expEn: "True. Opportunity cost of 1 chair is the number of tables Mike must give up. Since 20 chairs = 4 tables, 1 chair = 4/20 = 1/5 table.",
-expZh: "正確。1 把椅子的機會成本就是 Mike 需要放棄多少桌子。因為 20 把椅子 = 4 張桌子，所以 1 把椅子 = 4/20 = 1/5 桌。"
-}
-];
+(function() {
+    const questions = [
+        {
+            q: "Who has the absolute advantage in producing potatoes?",
+            options: ["Farmer", "Rancher", "Both", "Neither"],
+            answer: 1,
+            explanation: "Rancher: 10 min/oz vs Farmer: 15 min/oz. The Rancher requires less time to produce the same amount. <br> 牧場主人：10分鐘/盎司 對比 農夫：15分鐘/盎司。牧場主人生產相同數量所需時間較少。"
+        },
+        {
+            q: "What determines if there are gains from trade?",
+            options: ["Absolute advantage", "Comparative advantage", "Market size", "Total output"],
+            answer: 1,
+            explanation: "Potential gains from trade are based on comparative advantage, not absolute advantage. <br> 潛在的貿易利得是基於比較優勢，而非絕對優勢。"
+        }
+    ];
 
-let userAnswers = new Array(quizData.length).fill(null);
+    let currentQ = 0;
+    let score = 0;
 
-function renderQuiz() {
-const container = document.getElementById('quiz-container');
-container.innerHTML = '';
+    const qText = document.getElementById('question-text');
+    const optContainer = document.getElementById('options-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const feedbackContainer = document.getElementById('feedback-container');
+    const explanationText = document.getElementById('explanation-text');
+    const nextBtn = document.getElementById('next-btn');
+    const quizContent = document.getElementById('quiz-content');
+    const resultContainer = document.getElementById('result-container');
+    const scoreText = document.getElementById('score-text');
 
-quizData.forEach((q, qIndex) => {
-const qDiv = document.createElement('div');
-qDiv.className = 'mb-8 p-4 border border-gray-200 rounded bg-white shadow-sm';
+    function loadQuestion() {
+        const q = questions[currentQ];
+        qText.innerText = `Q${currentQ + 1}: ${q.q}`;
+        optContainer.innerHTML = '';
+        feedbackContainer.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+        
+        q.options.forEach((opt, index) => {
+            const div = document.createElement('div');
+            div.innerHTML = `<label class="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded">
+                <input type="radio" name="q" value="${index}" class="form-radio h-4 w-4 text-blue-600">
+                <span>${opt}</span>
+            </label>`;
+            optContainer.appendChild(div);
+        });
+    }
 
-const qTitle = document.createElement('p');
-qTitle.className = 'font-bold text-lg mb-3';
-qTitle.innerHTML = `${qIndex + 1}. ${q.question}`;
-qDiv.appendChild(qTitle);
+    submitBtn.onclick = () => {
+        const selected = document.querySelector('input[name="q"]:checked');
+        if (!selected) return alert('Please select an answer.');
+        
+        const isCorrect = parseInt(selected.value) === questions[currentQ].answer;
+        if (isCorrect) score++;
+        
+        explanationText.innerHTML = `<strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong><br>${questions[currentQ].explanation}`;
+        submitBtn.classList.add('hidden');
+        feedbackContainer.classList.remove('hidden');
+    };
 
-q.options.forEach((opt, oIndex) => {
-const label = document.createElement('label');
-label.className = 'block my-2 p-2 border border-gray-100 rounded cursor-pointer hover:bg-gray-50';
-label.id = `label_q${qIndex}_o${oIndex}`;
+    nextBtn.onclick = () => {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    };
 
-const input = document.createElement('input');
-input.type = 'radio';
-input.name = `q${qIndex}`;
-input.value = oIndex;
-input.className = 'mr-2';
+    function showResult() {
+        quizContent.classList.add('hidden');
+        feedbackContainer.classList.add('hidden');
+        resultContainer.classList.remove('hidden');
+        const finalScore = Math.round((score / questions.length) * 100);
+        scoreText.innerText = `You scored ${score}/${questions.length} (${finalScore}%).`;
+        
+        const history = JSON.parse(localStorage.getItem('quiz_history') || '[]');
+        history.push({
+            date: new Date().toISOString().split('T')[0],
+            unit: 'Topic 2: Interdependence',
+            score: finalScore
+        });
+        localStorage.setItem('quiz_history', JSON.stringify(history));
+    }
 
-if (userAnswers[qIndex] === oIndex) {
-input.checked = true;
-}
-
-input.onchange = () => { 
-userAnswers[qIndex] = oIndex; 
-};
-
-label.appendChild(input);
-label.appendChild(document.createTextNode(opt));
-qDiv.appendChild(label);
-});
-
-const expBox = document.createElement('div');
-expBox.id = `exp_q${qIndex}`;
-expBox.className = 'explanation';
-expBox.innerHTML = `
-<strong>Explanation / 題解:</strong><br>
-<span class="text-sm">${q.expEn}</span><br>
-<hr class="my-2 border-blue-200">
-<span class="text-sm text-gray-700"><strong>中文：</strong>${q.expZh}</span>
-`;
-qDiv.appendChild(expBox);
-
-container.appendChild(qDiv);
-});
-}
-
-function submitQuiz() {
-let score = 0;
-const total = quizData.length;
-
-quizData.forEach((q, qIndex) => {
-const selectedOptIndex = userAnswers[qIndex];
-const inputs = document.querySelectorAll(`input[name="q${qIndex}"]`);
-
-inputs.forEach(input => input.disabled = true);
-
-const isCorrect = (selectedOptIndex === q.answer);
-if (isCorrect) score++;
-
-q.options.forEach((opt, oIndex) => {
-const label = document.getElementById(`label_q${qIndex}_o${oIndex}`);
-if (oIndex === q.answer) {
-label.classList.add('correct-bg');
-} else if (selectedOptIndex !== null && oIndex === selectedOptIndex && !isCorrect) {
-label.classList.add('wrong-bg');
-}
-});
-
-document.getElementById(`exp_q${qIndex}`).classList.add('show-explanation');
-});
-
-const timestamp = new Date().toLocaleString();
-const newResult = { topic: "Topic 2: Interdependence", score: score, total: total, date: timestamp };
-const history = JSON.parse(localStorage.getItem('study_results') || '[]');
-history.push(newResult);
-localStorage.setItem('study_results', JSON.stringify(history));
-
-document.getElementById('score-value').innerText = score;
-document.getElementById('score-display').classList.remove('hidden');
-document.getElementById('submit-btn').classList.add('hidden');
-document.getElementById('reset-btn').classList.remove('hidden');
-
-alert(`測驗完成！得分：${score}/${total}。\n成績已儲存至系統。`);
-}
-
-function resetQuiz() {
-userAnswers = new Array(quizData.length).fill(null);
-renderQuiz();
-
-document.getElementById('score-display').classList.add('hidden');
-document.getElementById('submit-btn').classList.remove('hidden');
-document.getElementById('reset-btn').classList.add('hidden');
-}
-
-// 移除 DOMContentLoaded，直接執行函數 (Docsify SPA 必備寫法)
-renderQuiz();
-document.getElementById('submit-btn').addEventListener('click', submitQuiz);
-document.getElementById('reset-btn').addEventListener('click', resetQuiz);
+    loadQuestion();
+})();
 </script>
