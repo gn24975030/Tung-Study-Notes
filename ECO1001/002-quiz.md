@@ -1,16 +1,3 @@
-# Topic 2 Quiz（Q2: Interdependence and Gains from Trade）
-
-**Course (課程)**: Principles of Economics 2026  
-**Topic (主題)**: Topic 2: Interdependence and Gains from Trade
-
----
-
-## Instructions（使用說明）
-Pick one option for each question, then press **SUBMIT**.  
-After submitting, the correct answers and explanations will appear, and your score will be saved to your browser history.
-
-<div id="quiz-container"></div>
-
 <script>
 const quizData = [
     {
@@ -39,9 +26,40 @@ const quizData = [
     }
 ];
 
+function submitQuiz() {
+    let score = 0;
+    const total = quizData.length;
+
+    quizData.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const resultDiv = document.getElementById(`result${index}`);
+        resultDiv.classList.remove('hidden');
+        
+        if (selected && parseInt(selected.value) === q.answer) {
+            score++;
+            resultDiv.innerHTML = "✅ Correct!<br>" + q.explanation;
+            resultDiv.className = "mt-3 p-3 rounded text-sm bg-green-100 border border-green-200";
+        } else {
+            resultDiv.innerHTML = "❌ Incorrect. The correct answer was: " + q.options[q.answer] + "<br>" + q.explanation;
+            resultDiv.className = "mt-3 p-3 rounded text-sm bg-red-100 border border-red-200";
+        }
+    });
+
+    const timestamp = new Date().toLocaleString();
+    const newResult = { topic: "Topic 2: Interdependence", score: score, total: total, date: timestamp };
+    
+    const history = JSON.parse(localStorage.getItem('study_results') || '[]');
+    history.push(newResult);
+    localStorage.setItem('study_results', JSON.stringify(history));
+    
+    alert(`測驗完成！得分：${score}/${total}。\n成績已儲存至系統。`);
+}
+
 function renderQuiz() {
     const container = document.getElementById('quiz-container');
     container.innerHTML = '';
+    
+    // 渲染題目
     quizData.forEach((q, index) => {
         const div = document.createElement('div');
         div.className = 'quiz-question my-4 p-4 border rounded shadow-sm';
@@ -56,39 +74,14 @@ function renderQuiz() {
         `;
         container.appendChild(div);
     });
-    container.innerHTML += `<button onclick="submitQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors">SUBMIT</button>`;
-}
 
-function submitQuiz() {
-    let score = 0;
-    const total = quizData.length;
-
-    // 1. 批改邏輯：未作答直接視為錯誤
-    quizData.forEach((q, index) => {
-        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        const resultDiv = document.getElementById(`result${index}`);
-        resultDiv.classList.remove('hidden');
-        
-        if (selected && parseInt(selected.value) === q.answer) {
-            score++;
-            resultDiv.innerHTML = "✅ Correct!<br>" + q.explanation;
-            resultDiv.className = "mt-3 p-3 rounded text-sm bg-green-100 border border-green-200";
-        } else {
-            // 若 selected 為 null 或答案錯誤，皆顯示為錯誤
-            resultDiv.innerHTML = "❌ Incorrect. The correct answer was: " + q.options[q.answer] + "<br>" + q.explanation;
-            resultDiv.className = "mt-3 p-3 rounded text-sm bg-red-100 border border-red-200";
-        }
-    });
-
-    // 2. 儲存成績到 localStorage
-    const timestamp = new Date().toLocaleString();
-    const newResult = { topic: "Topic 2: Interdependence", score: score, total: total, date: timestamp };
+    // 建立按鈕並綁定事件
+    const btn = document.createElement('button');
+    btn.textContent = 'SUBMIT';
+    btn.className = 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors';
+    btn.addEventListener('click', submitQuiz);
     
-    const history = JSON.parse(localStorage.getItem('study_results') || '[]');
-    history.push(newResult);
-    localStorage.setItem('study_results', JSON.stringify(history));
-    
-    alert(`測驗完成！得分：${score}/${total}。\n成績已儲存至系統。`);
+    container.appendChild(btn);
 }
 
 renderQuiz();
