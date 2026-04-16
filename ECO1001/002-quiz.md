@@ -1,3 +1,6 @@
+<!-- 002-quiz.md：互動測驗頁（SUBMIT後才顯示答案），問題與選項皆全英文；答案與題解才中英對照 -->
+<!-- 注意：本頁包含原生 JS 互動功能，直接可在 Docsify 使用 executeScript。 -->
+
 # Topic 2 Quiz（Q2: Interdependence and Gains from Trade）
 
 **Course (課程)**: Principles of Economics 2026  
@@ -6,119 +9,238 @@
 ---
 
 ## Instructions（使用說明）
-請為每道題目選擇一個選項，完成後點擊題目底部的 **「Submit / 提交答案」**。  
-（若有未作答的題目，提交時將直接視為答錯）。  
-提交後將會顯示正確答案與中英詳解，您的成績也會自動儲存至瀏覽器的學習紀錄中。
+Pick one option for each question, then press **SUBMIT**.  
+After submitting, the correct answers and explanations (with bilingual text) will appear.
 
-<div id="quiz-app" class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-    <div id="questions-list" class="space-y-8">
-        <!-- 題目將透過 JavaScript 自動渲染 -->
-    </div>
-    
-    <button id="submit-btn" class="mt-8 w-full py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition">
-        Submit Answers
-    </button>
+---
 
-    <div id="results-area" class="hidden mt-8 pt-8 border-t-2 border-gray-200">
-        <h2 class="text-2xl font-bold mb-4">Results</h2>
-        <p id="score-display" class="text-xl mb-6 font-semibold"></p>
-        <div id="feedback-list" class="space-y-6"></div>
-        <button onclick="location.reload()" class="mt-8 px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-            Retake Quiz
-        </button>
-    </div>
+<!-- ========= Question 1 ========= -->
+## Question 1
+**Assume Zimbabwe and Portugal can switch between producing toothbrushes and producing hairbrushes at a constant rate.**
+
+In 1 hour:
+- Zimbabwe can produce **20 toothbrushes** or **6 hairbrushes**.
+- Portugal can produce **12 toothbrushes** or **10 hairbrushes**.
+
+**(Q1a)** Which country has a comparative advantage in producing **toothbrushes**?
+<!-- options for Q1a -->
+<div class="quiz-block" data-qid="q1a" data-type="radio" style="margin-top:12px;">
+  <label><input type="radio" name="q1a" value="A" /> A) Zimbabwe</label><br/>
+  <label><input type="radio" name="q1a" value="B" /> B) Portugal</label><br/>
+  <label><input type="radio" name="q1a" value="C" /> C) Neither</label><br/>
+  <label><input type="radio" name="q1a" value="D" /> D) Both</label>
 </div>
 
+<div id="ex-q1a" class="quiz-explain" style="display:none; margin-top:10px; padding:10px; border:1px solid #e5e7eb; border-radius:8px;">
+  <div class="quiz-correct" style="font-weight:700; margin-bottom:6px;"></div>
+  <div class="quiz-expl">
+    <div class="bilingual" style="margin-bottom:6px;">
+      <div><b>English (Answer & Explanation)</b>: Zimbabwe should specialize in producing toothbrushes because its opportunity cost of hairbrushes is lower when producing toothbrushes.</div>
+      <div style="margin-top:4px;"><b>中文（答案與題解）</b>：Zimbabwe 應該專業分工在生產牙刷，因為它在把資源用來生產牙刷時，相對於其他商品的機會成本更低。</div>
+    </div>
+    <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; background:#f9fafb; padding:8px; border-radius:6px;">
+      Opportunity cost (toothbrushes in terms of hairbrushes):
+      <br/>Zimbabwe: \( \frac{6}{20} = 0.3 \) hairbrush per toothbrush
+      <br/>Portugal: \( \frac{10}{12} \approx 0.833 \) hairbrush per toothbrush
+      <br/>Lower opportunity cost ⇒ comparative advantage.
+    </div>
+  </div>
+</div>
+
+---
+
+<!-- ========= Question 2 ========= -->
+## Question 2
+The following table describes production possibilities (per worker per hour):
+
+- **Boston**: 3 red socks (R) and 3 white socks (W)  
+- **Chicago**: 2 red socks (R) and 1 white sock (W)
+
+**(Q2d)** What is the range of prices at which trade can occur?
+
+Assume price of red socks is measured relative to white socks.
+
+<div class="quiz-block" data-qid="q2d" data-type="radio" style="margin-top:12px;">
+  <label><input type="radio" name="q2d" value="A" /> A) \(1W \le 1R \le 2W\)</label><br/>
+  <label><input type="radio" name="q2d" value="B" /> B) \(0.5W \le 1R \le 1W\)</label><br/>
+  <label><input type="radio" name="q2d" value="C" /> C) \(1R \le 0.5W\)</label><br/>
+  <label><input type="radio" name="q2d" value="D" /> D) \(2W \le 1R\)</label>
+</div>
+
+<div id="ex-q2d" class="quiz-explain" style="display:none; margin-top:10px; padding:10px; border:1px solid #e5e7eb; border-radius:8px;">
+  <div class="quiz-correct" style="font-weight:700; margin-bottom:6px;"></div>
+  <div class="quiz-expl">
+    <div class="bilingual" style="margin-bottom:6px;">
+      <div><b>English (Answer & Explanation)</b>: The trade can occur when \( \frac{1R}{1W} \) is between the opportunity-cost bounds. Here, the acceptable range is \(1W \le 1R \le 2W\).</div>
+      <div style="margin-top:4px;"><b>中文（答案與題解）</b>：只要紅襪與白襪的「相對價格」落在雙方都接受的機會成本範圍內，貿易就能發生。本題可行範圍為 \(1W \le 1R \le 2W\)。</div>
+    </div>
+    <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; background:#f9fafb; padding:8px; border-radius:6px;">
+      Boston: Output per hour: R=3, W=3 ⇒ opportunity cost of 1R is 1W
+      <br/>Chicago: Output per hour: R=2, W=1 ⇒ opportunity cost of 1R is 0.5W
+      <br/>So trade price must satisfy: Boston accepts ≥ 1W per 1R, Chicago accepts ≤ 2R per 1W
+      <br/>Equivalent acceptable range: \(1W \le 1R \le 2W\).
+    </div>
+  </div>
+</div>
+
+---
+
+<!-- ========= Question 3 ========= -->
+## Question 3
+**True or False**
+
+"Canada and the U.S. both produce wheat and computer software. Canada is said to have the comparative advantage in producing wheat if Canada requires fewer resources than the U.S. to produce a bushel of wheat."
+
+<div class="quiz-block" data-qid="q3" data-type="radio" style="margin-top:12px;">
+  <label><input type="radio" name="q3" value="A" /> A) True</label><br/>
+  <label><input type="radio" name="q3" value="B" /> B) False</label>
+</div>
+
+<div id="ex-q3" class="quiz-explain" style="display:none; margin-top:10px; padding:10px; border:1px solid #e5e7eb; border-radius:8px;">
+  <div class="quiz-correct" style="font-weight:700; margin-bottom:6px;"></div>
+  <div class="quiz-expl">
+    <div class="bilingual" style="margin-bottom:6px;">
+      <div><b>English (Answer & Explanation)</b>: False. Fewer resources to produce wheat means absolute advantage, not comparative advantage. Comparative advantage is about having a lower opportunity cost of producing wheat.</div>
+      <div style="margin-top:4px;"><b>中文（答案與題解）</b>：錯。比較資源較少能生產小麥屬於「絕對利益」，不是「比較利益」。比較利益是看生產小麥的機會成本是否更低。</div>
+    </div>
+  </div>
+</div>
+
+---
+
+<!-- ========= Question 4 ========= -->
+## Question 4
+**True or False**
+
+"Mike can make 4 tables or 20 chairs in one month. His opportunity cost of 1 chair is 1/5 table."
+
+<div class="quiz-block" data-qid="q4" data-type="radio" style="margin-top:12px;">
+  <label><input type="radio" name="q4" value="A" /> A) True</label><br/>
+  <label><input type="radio" name="q4" value="B" /> B) False</label>
+</div>
+
+<div id="ex-q4" class="quiz-explain" style="display:none; margin-top:10px; padding:10px; border:1px solid #e5e7eb; border-radius:8px;">
+  <div class="quiz-correct" style="font-weight:700; margin-bottom:6px;"></div>
+  <div class="quiz-expl">
+    <div class="bilingual" style="margin-bottom:6px;">
+      <div><b>English (Answer & Explanation)</b>: True. Opportunity cost of 1 chair is the number of tables Mike must give up. Since 20 chairs = 4 tables, 1 chair = 4/20 = 1/5 table.</div>
+      <div style="margin-top:4px;"><b>中文（答案與題解）</b>：正確。1 把椅子的機會成本就是 Mike 需要放棄多少桌子。因為 20 把椅子 = 4 張桌子，所以 1 把椅子 = 4/20 = 1/5 桌。</div>
+    </div>
+    <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; background:#f9fafb; padding:8px; border-radius:6px;">
+      \(\text{tables per chair} = \frac{4}{20} = \frac{1}{5}\)
+    </div>
+  </div>
+</div>
+
+---
+
+## Submit（提交）
+<button id="btn-submit" type="button" style="margin-top:14px; padding:10px 14px; border:none; border-radius:8px; background:#2563eb; color:white; cursor:pointer;">
+  SUBMIT
+</button>
+
+<div id="quiz-result" style="margin-top:12px; display:none; padding:10px; border-radius:8px; border:1px solid #e5e7eb;"></div>
+
 <script>
-(function() {
-    // 題目資料庫
-    const questions = [
-        {
-            q: "Who has the absolute advantage in producing potatoes?",
-            options: ["Farmer", "Rancher", "Both", "Neither"],
-            answer: 1,
-            explanation: "Rancher: 10 min/oz vs Farmer: 15 min/oz. The Rancher requires less time to produce the same amount. <br> 牧場主人：10分鐘/盎司 對比 農夫：15分鐘/盎司。牧場主人生產相同數量所需時間較少。"
-        },
-        {
-            q: "What determines if there are gains from trade?",
-            options: ["Absolute advantage", "Comparative advantage", "Market size", "Total output"],
-            answer: 1,
-            explanation: "Potential gains from trade are based on comparative advantage, not absolute advantage. <br> 潛在的貿易利得是基於比較優勢，而非絕對優勢。"
-        }
-    ];
+(function () {
+  const ANSWERS = {
+    q1a: "A",
+    q2d: "A",
+    q3: "B",
+    q4: "A"
+  };
 
-    const listContainer = document.getElementById('questions-list');
-    const submitBtn = document.getElementById('submit-btn');
-    const resultsArea = document.getElementById('results-area');
-    const scoreDisplay = document.getElementById('score-display');
-    const feedbackList = document.getElementById('feedback-list');
+  const EXPL_IDS = {
+    q1a: "ex-q1a",
+    q2d: "ex-q2d",
+    q3: "ex-q3",
+    q4: "ex-q4"
+  };
 
-    // 1. 渲染所有題目
-    questions.forEach((q, qIndex) => {
-        const div = document.createElement('div');
-        div.className = "question-block";
-        div.innerHTML = `
-            <p class="font-bold text-lg mb-3">${qIndex + 1}. ${q.q}</p>
-            <div class="space-y-2">
-                ${q.options.map((opt, oIndex) => `
-                    <label class="flex items-center space-x-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
-                        <input type="radio" name="q${qIndex}" value="${oIndex}" class="h-4 w-4 text-blue-600">
-                        <span>${opt}</span>
-                    </label>
-                `).join('')}
-            </div>
-        `;
-        listContainer.appendChild(div);
+  const btn = document.getElementById("btn-submit");
+  const resultBox = document.getElementById("quiz-result");
+
+  function getSelectedValue(name) {
+    const checked = document.querySelector('input[name="' + name + '"]:checked');
+    return checked ? checked.value : null;
+  }
+
+  function showExplain(qid) {
+    const ex = document.getElementById(EXPL_IDS[qid]);
+    if (!ex) return;
+    ex.style.display = "block";
+    const correct = ANSWERS[qid];
+    const correctText = "Correct answer: " + correct + ".";
+    const el = ex.querySelector(".quiz-correct");
+    if (el) el.textContent = correctText;
+  }
+
+  function markChosenStyle(qid, chosen, correct) {
+    const container = document.querySelector('.quiz-block[data-qid="' + qid + '"]');
+    if (!container) return;
+
+    const inputs = container.querySelectorAll('input[type="radio"][name="' + qid + '"]');
+    inputs.forEach(inp => {
+      const label = inp.closest("label");
+      if (!label) return;
+
+      label.style.opacity = "1";
+      label.style.fontWeight = "400";
+      label.style.background = "transparent";
+      label.style.padding = "0";
     });
 
-    // 2. 提交邏輯
-    submitBtn.onclick = () => {
-        let score = 0;
-        const userAnswers = [];
+    inputs.forEach(inp => {
+      const label = inp.closest("label");
+      if (!label) return;
 
-        // 檢查是否全填
-        for (let i = 0; i < questions.length; i++) {
-            const selected = document.querySelector(`input[name="q${i}"]:checked`);
-            if (!selected) return alert(`Please answer question ${i + 1}`);
-            userAnswers.push(parseInt(selected.value));
-        }
+      if (inp.value === chosen && chosen !== correct) {
+        label.style.background = "#fef2f2";
+        label.style.borderRadius = "6px";
+        label.style.padding = "6px 8px";
+        label.style.margin = "4px 0";
+      }
+      if (inp.value === correct) {
+        label.style.background = "#ecfccb";
+        label.style.borderRadius = "6px";
+        label.style.padding = "6px 8px";
+        label.style.margin = "4px 0";
+        label.style.fontWeight = "700";
+      }
+    });
+  }
 
-        // 計算分數
-        userAnswers.forEach((ans, index) => {
-            if (ans === questions[index].answer) score++;
-        });
+  btn.addEventListener("click", function () {
+    const qids = Object.keys(ANSWERS);
 
-        // 顯示結果
-        submitBtn.classList.add('hidden');
-        resultsArea.classList.remove('hidden');
-        scoreDisplay.innerText = `You scored ${score} out of ${questions.length} (${Math.round((score/questions.length)*100)}%).`;
+    // validation
+    for (const qid of qids) {
+      const chosen = getSelectedValue(qid);
+      if (chosen === null) {
+        resultBox.style.display = "block";
+        resultBox.style.borderColor = "#fca5a5";
+        resultBox.style.background = "#fef2f2";
+        resultBox.innerHTML = "<b>Please answer all questions before submitting.</b>";
+        return;
+      }
+    }
 
-        // 渲染解析
-        feedbackList.innerHTML = '';
-        questions.forEach((q, index) => {
-            const isCorrect = userAnswers[index] === q.answer;
-            const div = document.createElement('div');
-            div.className = `p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
-            div.innerHTML = `
-                <p class="font-bold">Q${index + 1}: ${q.q}</p>
-                <p class="mt-2">Your answer: <strong>${q.options[userAnswers[index]]}</strong></p>
-                <p class="text-green-700 font-semibold">Correct answer: ${q.options[q.answer]}</p>
-                <div class="mt-3 text-gray-700 text-sm border-t pt-2">${q.explanation}</div>
-            `;
-            feedbackList.appendChild(div);
-        });
+    // score
+    let score = 0;
+    for (const qid of qids) {
+      const chosen = getSelectedValue(qid);
+      const correct = ANSWERS[qid];
+      if (chosen === correct) score++;
 
-        // 儲存至 localStorage
-        const history = JSON.parse(localStorage.getItem('quiz_history') || '[]');
-        history.push({
-            date: new Date().toISOString().split('T')[0],
-            unit: 'Topic 2: Interdependence',
-            score: Math.round((score/questions.length)*100)
-        });
-        localStorage.setItem('quiz_history', JSON.stringify(history));
-        
-        // 滾動到結果區
-        resultsArea.scrollIntoView({ behavior: 'smooth' });
-    };
+      showExplain(qid);
+      markChosenStyle(qid, chosen, correct);
+    }
+
+    const total = qids.length;
+    resultBox.style.display = "block";
+    resultBox.style.borderColor = "#d1d5db";
+    resultBox.style.background = "#f9fafb";
+    resultBox.innerHTML = "<b>Score:</b> " + score + " / " + total + ".";
+  });
 })();
 </script>
