@@ -1,3 +1,16 @@
+# Topic 2 Quiz（Q2: Interdependence and Gains from Trade）
+
+**Course (課程)**: Principles of Economics 2026  
+**Topic (主題)**: Topic 2: Interdependence and Gains from Trade
+
+---
+
+## Instructions（使用說明）
+Pick one option for each question, then press **SUBMIT**.  
+After submitting, the correct answers and explanations will appear, and your score will be saved to your browser history.
+
+<div id="quiz-container"></div>
+
 <script>
 const quizData = [
     {
