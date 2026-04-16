@@ -10,34 +10,28 @@
 （若有未作答的題目，提交時將直接視為答錯）。  
 提交後將會顯示正確答案與中英詳解，您的成績也會自動儲存至瀏覽器的學習紀錄中。
 
-<div id="quiz-container" class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-    <!-- 測驗區 -->
-    <div id="quiz-content">
-        <h2 id="question-text" class="text-xl font-bold mb-4">Loading...</h2>
-        <div id="options-container" class="space-y-3"></div>
-        <button id="submit-btn" class="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Submit Answer</button>
+<div id="quiz-app" class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div id="questions-list" class="space-y-8">
+        <!-- 題目將透過 JavaScript 自動渲染 -->
     </div>
     
-    <!-- 結果與檢視區 -->
-    <div id="result-container" class="hidden">
-        <h2 class="text-2xl font-bold mb-4">Quiz Completed!</h2>
-        <p id="score-text" class="text-lg mb-4"></p>
-        <div class="flex gap-4">
-            <button id="review-btn" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Review Answers</button>
-            <a href="#/result" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">View History</a>
-        </div>
-    </div>
+    <button id="submit-btn" class="mt-8 w-full py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition">
+        Submit Answers
+    </button>
 
-    <!-- 詳解列表區 -->
-    <div id="review-container" class="hidden mt-6">
-        <h2 class="text-xl font-bold mb-4 border-b pb-2">Answer Review</h2>
-        <div id="review-list" class="space-y-6"></div>
-        <button onclick="location.reload()" class="mt-6 px-4 py-2 bg-gray-600 text-white rounded">Retake Quiz</button>
+    <div id="results-area" class="hidden mt-8 pt-8 border-t-2 border-gray-200">
+        <h2 class="text-2xl font-bold mb-4">Results</h2>
+        <p id="score-display" class="text-xl mb-6 font-semibold"></p>
+        <div id="feedback-list" class="space-y-6"></div>
+        <button onclick="location.reload()" class="mt-8 px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            Retake Quiz
+        </button>
     </div>
 </div>
 
 <script>
 (function() {
+    // 題目資料庫
     const questions = [
         {
             q: "Who has the absolute advantage in producing potatoes?",
@@ -53,86 +47,78 @@
         }
     ];
 
-    let currentQ = 0;
-    let score = 0;
-    let userAnswers = []; // 儲存使用者選擇的索引
-
-    const qText = document.getElementById('question-text');
-    const optContainer = document.getElementById('options-container');
+    const listContainer = document.getElementById('questions-list');
     const submitBtn = document.getElementById('submit-btn');
-    const quizContent = document.getElementById('quiz-content');
-    const resultContainer = document.getElementById('result-container');
-    const scoreText = document.getElementById('score-text');
-    const reviewBtn = document.getElementById('review-btn');
-    const reviewContainer = document.getElementById('review-container');
-    const reviewList = document.getElementById('review-list');
+    const resultsArea = document.getElementById('results-area');
+    const scoreDisplay = document.getElementById('score-display');
+    const feedbackList = document.getElementById('feedback-list');
 
-    function loadQuestion() {
-        const q = questions[currentQ];
-        qText.innerText = `Q${currentQ + 1}: ${q.q}`;
-        optContainer.innerHTML = '';
-        
-        q.options.forEach((opt, index) => {
-            const div = document.createElement('div');
-            div.innerHTML = `<label class="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded">
-                <input type="radio" name="q" value="${index}" class="form-radio h-4 w-4 text-blue-600">
-                <span>${opt}</span>
-            </label>`;
-            optContainer.appendChild(div);
-        });
-    }
+    // 1. 渲染所有題目
+    questions.forEach((q, qIndex) => {
+        const div = document.createElement('div');
+        div.className = "question-block";
+        div.innerHTML = `
+            <p class="font-bold text-lg mb-3">${qIndex + 1}. ${q.q}</p>
+            <div class="space-y-2">
+                ${q.options.map((opt, oIndex) => `
+                    <label class="flex items-center space-x-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="q${qIndex}" value="${oIndex}" class="h-4 w-4 text-blue-600">
+                        <span>${opt}</span>
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        listContainer.appendChild(div);
+    });
 
+    // 2. 提交邏輯
     submitBtn.onclick = () => {
-        const selected = document.querySelector('input[name="q"]:checked');
-        if (!selected) return alert('Please select an answer.');
-        
-        const answerIndex = parseInt(selected.value);
-        userAnswers.push(answerIndex);
-        if (answerIndex === questions[currentQ].answer) score++;
-        
-        currentQ++;
-        if (currentQ < questions.length) {
-            loadQuestion();
-        } else {
-            showResult();
-        }
-    };
+        let score = 0;
+        const userAnswers = [];
 
-    function showResult() {
-        quizContent.classList.add('hidden');
-        resultContainer.classList.remove('hidden');
-        const finalScore = Math.round((score / questions.length) * 100);
-        scoreText.innerText = `You scored ${score}/${questions.length} (${finalScore}%).`;
-        
-        // 儲存到 localStorage
+        // 檢查是否全填
+        for (let i = 0; i < questions.length; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!selected) return alert(`Please answer question ${i + 1}`);
+            userAnswers.push(parseInt(selected.value));
+        }
+
+        // 計算分數
+        userAnswers.forEach((ans, index) => {
+            if (ans === questions[index].answer) score++;
+        });
+
+        // 顯示結果
+        submitBtn.classList.add('hidden');
+        resultsArea.classList.remove('hidden');
+        scoreDisplay.innerText = `You scored ${score} out of ${questions.length} (${Math.round((score/questions.length)*100)}%).`;
+
+        // 渲染解析
+        feedbackList.innerHTML = '';
+        questions.forEach((q, index) => {
+            const isCorrect = userAnswers[index] === q.answer;
+            const div = document.createElement('div');
+            div.className = `p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
+            div.innerHTML = `
+                <p class="font-bold">Q${index + 1}: ${q.q}</p>
+                <p class="mt-2">Your answer: <strong>${q.options[userAnswers[index]]}</strong></p>
+                <p class="text-green-700 font-semibold">Correct answer: ${q.options[q.answer]}</p>
+                <div class="mt-3 text-gray-700 text-sm border-t pt-2">${q.explanation}</div>
+            `;
+            feedbackList.appendChild(div);
+        });
+
+        // 儲存至 localStorage
         const history = JSON.parse(localStorage.getItem('quiz_history') || '[]');
         history.push({
             date: new Date().toISOString().split('T')[0],
             unit: 'Topic 2: Interdependence',
-            score: finalScore
+            score: Math.round((score/questions.length)*100)
         });
         localStorage.setItem('quiz_history', JSON.stringify(history));
-    }
-
-    reviewBtn.onclick = () => {
-        resultContainer.classList.add('hidden');
-        reviewContainer.classList.remove('hidden');
         
-        reviewList.innerHTML = '';
-        questions.forEach((q, index) => {
-            const isCorrect = userAnswers[index] === q.answer;
-            const div = document.createElement('div');
-            div.className = `p-4 rounded border ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
-            div.innerHTML = `
-                <p class="font-bold">Q${index + 1}: ${q.q}</p>
-                <p class="text-sm mt-1">Your answer: <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${q.options[userAnswers[index]]}</span></p>
-                <p class="text-sm">Correct answer: <span class="text-green-700 font-semibold">${q.options[q.answer]}</span></p>
-                <div class="mt-2 text-gray-600 text-sm border-t pt-2">${q.explanation}</div>
-            `;
-            reviewList.appendChild(div);
-        });
+        // 滾動到結果區
+        resultsArea.scrollIntoView({ behavior: 'smooth' });
     };
-
-    loadQuestion();
 })();
 </script>
