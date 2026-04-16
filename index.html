@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -6,7 +5,20 @@ html
   <title>Tung Study Notes</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  
+  <!-- 改用 Dark 主題 -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
+  
+  <style>
+    /* 微調一下深色模式下的連結顏色，避免太暗看不清楚 */
+    :root {
+      --theme-color: #42b983;
+    }
+    /* 讓程式碼區塊在深色模式下更明顯 */
+    pre {
+      background-color: #1e1e1e !important;
+    }
+  </style>
 </head>
 <body>
   <div id="app">筆記載入中...</div>
@@ -17,11 +29,22 @@ html
       repo: 'gn24975030/Tung-Study-Notes',
       loadSidebar: false,
       homepage: 'readme.md',
-      executeScript: true // <--- 新增呢行：允許執行 Markdown 內的 JavaScript
+      executeScript: true, // 允許執行 Markdown 內的 JavaScript
+      // 搜尋功能設定 (選用，讓深色模式下更好用)
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: '搜尋筆記...',
+        noData: '找不到結果!',
+      }
     }
   </script>
+  
+  <!-- Docsify 核心 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <!-- 新增呢行：Docsify 官方的 Script 執行外掛 -->
+  <!-- 搜尋外掛 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <!-- Script 執行外掛 -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/external-script.min.js"></script>
 </body>
 </html>
