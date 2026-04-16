@@ -13,44 +13,46 @@
 <!-- 引入 Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- 自訂樣式 -->
+<!-- 自訂樣式 (必須頂格寫，避免被當成程式碼區塊) -->
 <style>
-    .radio-custom:checked + label { background-color: #eff6ff; border-color: #3b82f6; box-shadow: 0 0 0 1px #3b82f6; }
-    .correct-answer { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; }
-    .wrong-answer { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
-    .explanation { display: none; }
-    .show-explanation { display: block; animation: fadeIn 0.5s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+.radio-custom:checked + label { background-color: #eff6ff; border-color: #3b82f6; box-shadow: 0 0 0 1px #3b82f6; }
+.correct-answer { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; }
+.wrong-answer { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+.explanation { display: none; }
+.show-explanation { display: block; animation: fadeIn 0.5s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 
+<!-- 主容器 (必須頂格寫) -->
 <div class="max-w-4xl mx-auto p-2 md:p-4 text-gray-800">
-    
-    <!-- 測驗題目容器 -->
-    <div id="quiz-container" class="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8 mb-24">
-        <!-- 題目將由 JavaScript 動態生成 -->
-    </div>
 
-    <!-- 底部懸浮按鈕與分數顯示 -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div id="score-display" class="text-2xl font-bold text-gray-800 hidden">
-                Score / 得分: <span id="score-value" class="text-blue-600 text-3xl">0</span> <span class="text-gray-500 text-lg">/ 4</span>
-            </div>
-            <div class="flex-1"></div> <!-- 佔位符 -->
-            <div class="flex gap-4 w-full sm:w-auto">
-                <button id="reset-btn" class="flex-1 sm:flex-none px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-bold text-lg hidden">
-                    Retry / 重新測驗
-                </button>
-                <button id="submit-btn" class="flex-1 sm:flex-none px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    Submit / 提交答案
-                </button>
-            </div>
-        </div>
-    </div>
+<!-- 測驗題目容器 -->
+<div id="quiz-container" class="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8 mb-24">
+<!-- 題目將由 JavaScript 動態生成 -->
 </div>
 
+<!-- 底部懸浮按鈕與分數顯示 -->
+<div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50">
+<div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+<div id="score-display" class="text-2xl font-bold text-gray-800 hidden">
+Score / 得分: <span id="score-value" class="text-blue-600 text-3xl">0</span> <span class="text-gray-500 text-lg">/ 4</span>
+</div>
+<div class="flex-1"></div>
+<div class="flex gap-4 w-full sm:w-auto">
+<button id="reset-btn" class="flex-1 sm:flex-none px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-bold text-lg hidden">
+Retry / 重新測驗
+</button>
+<button id="submit-btn" class="flex-1 sm:flex-none px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+Submit / 提交答案
+</button>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- JavaScript 邏輯 (必須頂格寫) -->
 <script>
-// 測驗資料
 const quizData = [
     {
         question: "Assume Zimbabwe and Portugal can switch between producing toothbrushes and producing hairbrushes at a constant rate. In 1 hour: Zimbabwe can produce 20 toothbrushes or 6 hairbrushes. Portugal can produce 12 toothbrushes or 10 hairbrushes. Which country has a comparative advantage in producing toothbrushes?",
@@ -84,14 +86,12 @@ const quizData = [
 
 let userAnswers = new Array(quizData.length).fill(null);
 
-// 初始化渲染
 document.addEventListener('DOMContentLoaded', () => {
     renderQuiz();
     document.getElementById('submit-btn').addEventListener('click', submitQuiz);
     document.getElementById('reset-btn').addEventListener('click', resetQuiz);
 });
 
-// 渲染測驗題目
 function renderQuiz() {
     const container = document.getElementById('quiz-container');
     container.innerHTML = '';
@@ -100,7 +100,6 @@ function renderQuiz() {
         const qDiv = document.createElement('div');
         qDiv.className = 'mb-10 pb-8 border-b border-gray-100 last:border-0 last:pb-0 last:mb-0';
         
-        // 題目文字
         const qTitle = document.createElement('h3');
         qTitle.className = 'text-lg md:text-xl font-semibold mb-5 text-gray-800 leading-relaxed';
         qTitle.innerHTML = `
@@ -111,7 +110,6 @@ function renderQuiz() {
         `;
         qDiv.appendChild(qTitle);
 
-        // 選項網格
         const optionsGrid = document.createElement('div');
         optionsGrid.className = 'grid grid-cols-1 gap-3 ml-0 md:ml-10';
         
@@ -127,12 +125,10 @@ function renderQuiz() {
             input.value = oIndex;
             input.className = 'peer hidden radio-custom';
             
-            // 恢復先前的選擇 (用於重做或重新渲染時)
             if (userAnswers[qIndex] === oIndex) {
                 input.checked = true;
             }
 
-            // 記錄使用者選擇
             input.onchange = () => { 
                 userAnswers[qIndex] = oIndex; 
             };
@@ -149,7 +145,6 @@ function renderQuiz() {
                 </div>
             `;
 
-            // 注入自訂 CSS 以實現選中時的圓點動畫效果
             const styleFix = document.createElement('style');
             styleFix.innerHTML = `
                 #${optId}:checked ~ label .w-6 { border-color: #3b82f6; background-color: #3b82f6; }
@@ -164,7 +159,6 @@ function renderQuiz() {
         
         qDiv.appendChild(optionsGrid);
 
-        // 詳解區塊 (預設隱藏)
         const expBox = document.createElement('div');
         expBox.id = `exp_q${qIndex}`;
         expBox.className = 'explanation mt-6 ml-0 md:ml-10 p-5 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl text-gray-800 shadow-sm';
@@ -184,7 +178,6 @@ function renderQuiz() {
     });
 }
 
-// 提交測驗
 function submitQuiz() {
     let score = 0;
     const total = quizData.length;
@@ -194,44 +187,35 @@ function submitQuiz() {
         const optionsDivs = document.querySelectorAll(`input[name="q${qIndex}"] + label`);
         const inputs = document.querySelectorAll(`input[name="q${qIndex}"]`);
         
-        // 禁用所有選項，防止提交後修改
         inputs.forEach(input => input.disabled = true);
 
-        // 判斷對錯 (如果 selectedOptIndex 是 null，isCorrect 自然為 false)
         const isCorrect = (selectedOptIndex === q.answer);
         if (isCorrect) score++;
 
-        // 標示正確與錯誤的選項
         q.options.forEach((opt, oIndex) => {
             if (oIndex === q.answer) {
-                // 永遠標示出正確答案 (綠色)
                 optionsDivs[oIndex].classList.add('correct-answer');
                 optionsDivs[oIndex].innerHTML += `<svg class="w-6 h-6 text-green-600 absolute right-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
             } else if (selectedOptIndex !== null && oIndex === selectedOptIndex && !isCorrect) {
-                // 只有當使用者有選擇該錯誤選項時，才標示錯誤 (紅色)
                 optionsDivs[oIndex].classList.add('wrong-answer');
                 optionsDivs[oIndex].innerHTML += `<svg class="w-6 h-6 text-red-500 absolute right-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
             }
         });
 
-        // 顯示詳解
         document.getElementById(`exp_q${qIndex}`).classList.add('show-explanation');
     });
 
-    // 儲存成績至 localStorage
     const timestamp = new Date().toLocaleString();
     const newResult = { topic: "Topic 2: Interdependence", score: score, total: total, date: timestamp };
     const history = JSON.parse(localStorage.getItem('study_results') || '[]');
     history.push(newResult);
     localStorage.setItem('study_results', JSON.stringify(history));
 
-    // 更新底部 UI 狀態
     document.getElementById('score-value').innerText = score;
     document.getElementById('score-display').classList.remove('hidden');
     document.getElementById('submit-btn').classList.add('hidden');
     document.getElementById('reset-btn').classList.remove('hidden');
     
-    // 彈出提示視窗
     setTimeout(() => {
         alert(`測驗完成！得分：${score}/${total}。\n成績已儲存至系統。`);
     }, 100);
@@ -239,12 +223,10 @@ function submitQuiz() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 重新測驗
 function resetQuiz() {
     userAnswers = new Array(quizData.length).fill(null);
     renderQuiz();
     
-    // 重置 UI 狀態
     document.getElementById('score-display').classList.add('hidden');
     document.getElementById('submit-btn').classList.remove('hidden');
     document.getElementById('reset-btn').classList.add('hidden');
