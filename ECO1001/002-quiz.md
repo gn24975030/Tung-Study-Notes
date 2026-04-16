@@ -1,6 +1,52 @@
 <!-- 002-quiz.md：互動測驗頁（SUBMIT後才顯示答案），問題與選項皆全英文；答案與題解才中英對照 -->
 <!-- 注意：本頁包含原生 JS 互動功能，直接可在 Docsify 使用 executeScript。 -->
+<!-- QUIZ layout / spacing widen fix -->
+<style>
+  .quiz-block{
+    max-width: 920px;
+    margin-top: 12px;
+  }
 
+  .quiz-block label{
+    display: block;
+    margin: 7px 0;
+    line-height: 1.45;
+    padding-left: 2px;
+  }
+
+  .quiz-explain{
+    max-width: 980px !important;
+    width: calc(100% - 32px) !important;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  .quiz-expl{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .quiz-explain pre,
+  .quiz-explain code{
+    max-width: 100%;
+    white-space: normal;
+    overflow: auto;
+    word-break: break-word;
+  }
+
+  #quiz-result{
+    max-width: 980px;
+    width: calc(100% - 32px);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  #btn-submit{
+    margin-top: 14px;
+  }
+</style>
 # Topic 2 Quiz（Q2: Interdependence and Gains from Trade）
 
 **Course (課程)**: Principles of Economics 2026  
